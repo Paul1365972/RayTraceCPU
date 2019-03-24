@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'io.github.paul1365972'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.10
+
+project.ext.jomlVersion = "1.9.13"
+
+application {
+    mainClassName = 'io.github.paul1365972.raytracecpu.RayTraceCPU'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    
+    implementation "org.joml:joml:${jomlVersion}"
+    
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
