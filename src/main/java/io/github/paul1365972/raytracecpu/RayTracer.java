@@ -1,6 +1,6 @@
 package io.github.paul1365972.raytracecpu;
 
-import io.github.paul1365972.raytracecpu.objects.Light;
+import io.github.paul1365972.raytracecpu.objects.lights.Light;
 import io.github.paul1365972.raytracecpu.objects.Ray;
 import io.github.paul1365972.raytracecpu.objects.TraceObject;
 import org.joml.Vector3f;

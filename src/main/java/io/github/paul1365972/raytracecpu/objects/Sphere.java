@@ -1,6 +1,7 @@
 package io.github.paul1365972.raytracecpu.objects;
 
 import io.github.paul1365972.raytracecpu.RayTracer;
+import io.github.paul1365972.raytracecpu.objects.lights.Light;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -53,21 +54,18 @@ public class Sphere extends TraceObject {
 		Vector3f color = new Vector3f(diffuse).mul(0.15f);
 		
 		for (Light light : tracer.getLights()) {
-			Vector3f dir = new Vector3f(light.p).sub(p);
+			Vector3f dir = light.toLight(hit);
 			Vector3f dirN = dir.normalize(new Vector3f());
 			Ray lightRay = new Ray(hit, dirN, ray.level++, ray.weight);
 			if (!tracer.occluded(lightRay, this)) {
-				float strength = light.intensity / dir.lengthSquared();
+				float strength = light.intensity(dir);
 				
 				float angle = Math.max(0, normal.dot(dirN));
-				color.add(new Vector3f(light.color).mul(diffuse).mul(strength * angle));
+				color.add(new Vector3f(light.getColor()).mul(diffuse).mul(strength * angle));
 				
-				if (lightRay.r.dot(normal) > 0) {
-					Vector3f reflected = new Vector3f(ray.r).reflect(normal);
-					float specular = (float) Math.pow(Math.max(0, reflected.dot(dirN)), 16f);
-					color.fma(strength * specular, light.color);
-				}
-				//color.set(lightRay.r.dot(normal));
+				Vector3f reflected = new Vector3f(ray.r).reflect(normal);
+				float specular = (float) Math.pow(Math.max(0, reflected.dot(dirN)), 16f);
+				color.fma(strength * specular, light.getColor());
 			}
 		}
 		return new Vector4f(color, 1);

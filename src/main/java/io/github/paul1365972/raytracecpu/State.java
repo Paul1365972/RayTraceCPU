@@ -1,7 +1,8 @@
 package io.github.paul1365972.raytracecpu;
 
-import io.github.paul1365972.raytracecpu.objects.Light;
+import io.github.paul1365972.raytracecpu.objects.lights.Light;
 import io.github.paul1365972.raytracecpu.objects.TraceObject;
+import io.github.paul1365972.raytracecpu.objects.lights.PointLight;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -19,6 +20,10 @@ public class State {
 		this.pos = new Vector3f(x, y, z);
 		this.pitch = pitch;
 		this.yaw = yaw;
+	}
+	
+	public void update(long frameNumber) {
+		((PointLight) lights.get(0)).getPosition().setComponent(1, 11 + 4 * (float) Math.sin(Math.toRadians(frameNumber * 10.0f)));
 	}
 	
 	public List<TraceObject> getObjects() {
