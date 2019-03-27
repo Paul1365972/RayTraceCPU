@@ -79,10 +79,10 @@ public class RayTracer {
 		return state.getLights();
 	}
 	
-	public boolean occluded(Ray ray) {
+	public boolean occluded(Ray ray, float range) {
 		for (TraceObject obj : state.getObjects()) {
 			float dist = obj.dist(ray);
-			if (dist > 0)
+			if (dist > 0 && dist < range)
 				return true;
 		}
 		return false;

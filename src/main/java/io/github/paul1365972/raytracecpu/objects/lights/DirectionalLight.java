@@ -23,6 +23,6 @@ public class DirectionalLight extends Light {
 	
 	@Override
 	public Vector3f toLight(Vector3f pos) {
-		return dir;
+		return new Vector3f(dir).mul(10_000);
 	}
 }

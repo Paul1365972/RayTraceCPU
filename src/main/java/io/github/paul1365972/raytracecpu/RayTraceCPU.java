@@ -25,15 +25,26 @@ public class RayTraceCPU {
 		state = new State(0, 0, 0, 0, 0);
 		
 		state.addLight(new PointLight(0, 10, 5, new Vector3f(1, 1, 1), 30));
+		/*for (int i = -1; i < 2; i++) {
+			for (int j = -1; j < 2; j++) {
+				state.addLight(new PointLight(0 + 0.05f * i, 10, 5 + 0.05f * j, new Vector3f(1, 1, 1), 30 / 9f));
+			}
+		}*/
+		
 		state.addLight(new DirectionalLight(0, 1, 0, new Vector3f(1, 1, 1), 0.3f));
+		/*for (int i = -2; i < 3; i++) {
+			for (int j = -2; j < 3; j++) {
+				state.addLight(new DirectionalLight(0.01f * i, 1, 0.01f * j, new Vector3f(1, 1, 1), 0.3f / 25f));
+			}
+		}*/
 		
 		state.addObject(new Sphere(-3, 0, 5, 1, new Vector3f(1, 0, 0), 16f, 1f, 0f));
 		state.addObject(new Sphere(0, 0, 5, 1, new Vector3f(0, 1, 0), 4f, 1f, 0f));
 		state.addObject(new Sphere(3, 0, 5, 1, new Vector3f(0, 0, 1), 64f, 1f, 0f));
 		state.addObject(new Sphere(0, 5, 0, 1, new Vector3f(1, 1, 1), 16f, 1f, 0.7f));
-		state.addObject(new Sphere(3, 0, 0, 1, new Vector3f(1, 1, 1), 16f, 0.2f, 0f));
-		state.addObject(new Plane(0, -5, 0, new Vector3f(0, 1, 0), new Vector3f(1, 1, 1), 16f, 1f, 0.2f));
-		
+		state.addObject(new Sphere(3, 0, 0, 1, new Vector3f(1, 1, 1), 16f, 0.3f, 0.6f));
+		state.addObject(new Plane(0, -5, 0, new Vector3f(0, 1, 0), new Vector3f(1, 1, 1), 1f, 1f, 0.7f));
+		//state.addObject(new Plane(0, 15, 0, new Vector3f(0, -1, 0), new Vector3f(1, 1, 1), 1f, 1f, 0.7f));
 		
 		frame = new Frame(state, unusedImages, renderedImages);
 		unusedImages.addAll(frame.generateImages(10, 1600 / 1, 850 / 1));

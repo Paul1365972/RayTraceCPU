@@ -44,7 +44,7 @@ public class Plane extends TraceObject {
 			Vector3f dirN = dir.normalize(new Vector3f());
 			
 			Ray lightRay = Ray.create(hit, dirN, ray.level, RayTracer.EPSILON);
-			if (!tracer.occluded(lightRay)) {
+			if (!tracer.occluded(lightRay, dir.length())) {
 				float strength = light.intensity(dir);
 				
 				float angle = Math.max(0, normal.dot(dirN));
