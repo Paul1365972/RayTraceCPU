@@ -23,7 +23,7 @@ public class State {
 	}
 	
 	public void update(long frameNumber) {
-		((PointLight) lights.get(0)).getPosition().setComponent(1, 11 + 4 * (float) Math.sin(Math.toRadians(frameNumber * 10.0f)));
+		//((PointLight) lights.get(0)).getPosition().setComponent(1, 11 + 4 * (float) Math.sin(Math.toRadians(frameNumber * 10.0f)));
 	}
 	
 	public List<TraceObject> getObjects() {

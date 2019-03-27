@@ -7,17 +7,19 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 public class RayTracer {
 	
-	public static final Vector3f UP = new Vector3f(0, 1, 0);
+	public static final float EPSILON = 0.01f;
+	private static final Vector3f UP = new Vector3f(0, 1, 0);
 	
-	private static final Vector4f NULL_VECTOR = new Vector4f(0);
 	private static final Vector4f BG_COLOR = new Vector4f(0, 0, 0, 1);
 	private static final float FOV = 90;
 	
 	private State state;
+	private AtomicInteger castedRays = new AtomicInteger();
 	
 	public RayTracer(State state) {
 		this.state = state;
@@ -49,31 +51,18 @@ public class RayTracer {
 			
 			Vector3f r = new Vector3f(p1m).fma(x, qx).fma(y, qy).normalize();
 			
-			Vector4f color = computeRay(new Ray(E, r, 0, 1));
-			color.lerp(BG_COLOR, 1 - color.w);
+			Vector4f color = computeRay(Ray.create(E, r, 0));
+			if (color.w < 1 - EPSILON || color.w > 1 + EPSILON)
+				throw new RuntimeException("");
 			Maths.clamp(color, 0, 1);
 			Maths.gamma(color, 1.4f);
 			
 			return ((int) (color.x * 255 + 0.5f) << 16) | ((int) (color.y * 255 + 0.5f) << 8)  | ((int) (color.z * 255 + 0.5f));
 		}).toArray();
-		
-		/*IntStream.range(0, width * height).parallel().forEach(k -> {
-			int i = k / width;
-			int j = k - i * width;
-			
-			Vector3f tmp2 = new Vector3f();
-			Vector3f r = new Vector3f(p1m).add(qx.mul(j, tmp2)).add(qy.mul(i, tmp2)).normalize();
-			
-			Vector4f color = computeRay(new Ray(E, r, 0, 1));
-			color.lerp(BG_COLOR, 1 - color.w);
-			Maths.clamp(color, 0, 1);
-			int value = ((int) (color.x * 255 + 0.5f) << 16) | ((int) (color.y * 255 + 0.5f) << 8)  | ((int) (color.z * 255 + 0.5f));
-			pixels[j + (height - 1 - i) * height] = value;
-		});
-		return pixels;*/
 	}
 	
 	public Vector4f computeRay(Ray ray) {
+		castedRays.getAndIncrement();
 		float minimum = Float.MAX_VALUE;
 		TraceObject nearest = null;
 		for (TraceObject obj : state.getObjects()) {
@@ -83,17 +72,15 @@ public class RayTracer {
 				nearest = obj;
 			}
 		}
-		return nearest != null ? nearest.trace(ray, minimum, this) : NULL_VECTOR;
+		return nearest != null ? nearest.trace(ray, minimum, this) : new Vector4f(BG_COLOR);
 	}
 	
 	public List<Light> getLights() {
 		return state.getLights();
 	}
 	
-	public boolean occluded(Ray ray, TraceObject ignore) {
+	public boolean occluded(Ray ray) {
 		for (TraceObject obj : state.getObjects()) {
-			if (obj == ignore)
-				continue;
 			float dist = obj.dist(ray);
 			if (dist > 0)
 				return true;

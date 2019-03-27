@@ -26,6 +26,7 @@ public class Frame implements KeyListener {
 	private JPanel jPanel;
 	
 	private boolean W, A, S, D, SPACE, SHIFT, UP, DOWN, RIGHT, LEFT;
+	private boolean record;
 	
 	public Frame(State state, LinkedBlockingQueue<BufferedImage> unused, LinkedBlockingQueue<BufferedImage> rendered) {
 		this.state = state;
@@ -37,11 +38,9 @@ public class Frame implements KeyListener {
 				jPanel = new JPanel(true) {
 					@Override
 					protected void paintComponent(Graphics g) {
-						Graphics2D g2d = (Graphics2D) g;
 						BufferedImage img = rendered.size() > 1 ? rendered.poll() : rendered.peek();
 						if (img != null) {
-							//g.drawImage(img, 0, 0, g.getClipBounds().width, g.getClipBounds().height, null);
-							g.drawImage(img.getScaledInstance(g.getClipBounds().width, g.getClipBounds().height, Image.SCALE_SMOOTH), 0, 0, null);
+							g.drawImage(img.getScaledInstance(g.getClipBounds().width, g.getClipBounds().height, Image.SCALE_FAST), 0, 0, null);
 							
 							unused.add(img);
 						}
@@ -98,6 +97,10 @@ public class Frame implements KeyListener {
 			state.addYaw(ROT);
 	}
 	
+	public boolean isRecording() {
+		return record;
+	}
+	
 	@Override
 	public void keyTyped(KeyEvent e) {
 	}
@@ -135,6 +138,9 @@ public class Frame implements KeyListener {
 			case KeyEvent.VK_LEFT:
 				LEFT = true;
 				break;
+			case KeyEvent.VK_R:
+				record = true;
+				break;
 			case KeyEvent.VK_ESCAPE:
 				System.exit(0);
 				break;
@@ -170,6 +176,9 @@ public class Frame implements KeyListener {
 				break;
 			case KeyEvent.VK_RIGHT:
 				RIGHT = false;
+				break;
+			case KeyEvent.VK_R:
+				record = false;
 				break;
 			case KeyEvent.VK_LEFT:
 				LEFT = false;

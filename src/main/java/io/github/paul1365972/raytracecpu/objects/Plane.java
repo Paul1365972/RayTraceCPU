@@ -5,24 +5,24 @@ import io.github.paul1365972.raytracecpu.objects.lights.Light;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-public class Sphere extends TraceObject {
+public class Plane extends TraceObject {
 	
-	protected float radius;
+	protected Vector3f normal;
 	protected Vector3f diffuse;
 	protected float shininess, opacity, reflectivity;
 	
-	public Sphere(Vector3f pos, float radius, Vector3f diffuse, float shininess, float opacity, float reflectivity) {
+	public Plane(Vector3f pos, Vector3f normal, Vector3f diffuse, float shininess, float opacity, float reflectivity) {
 		super(pos);
-		this.radius = radius;
+		this.normal = normal;
 		this.diffuse = diffuse;
 		this.shininess = shininess;
 		this.opacity = opacity;
 		this.reflectivity = reflectivity;
 	}
 	
-	public Sphere(float x, float y, float z, float radius, Vector3f diffuse, float shininess, float opacity, float reflectivity) {
+	public Plane(float x, float y, float z, Vector3f normal, Vector3f diffuse, float shininess, float opacity, float reflectivity) {
 		super(x, y, z);
-		this.radius = radius;
+		this.normal = normal;
 		this.diffuse = diffuse;
 		this.shininess = shininess;
 		this.opacity = opacity;
@@ -31,33 +31,12 @@ public class Sphere extends TraceObject {
 	
 	@Override
 	public float dist(Ray ray) {
-		Vector3f v = new Vector3f(ray.p).sub(p);
-		float vdd = v.dot(ray.r);
-		float tmp = vdd * vdd - v.lengthSquared() + radius * radius;
-		if (tmp < 0)
-			return Float.NEGATIVE_INFINITY;
-		tmp = (float) Math.sqrt(tmp);
-		float a = -vdd + tmp;
-		float b = -vdd - tmp;
-		if (a > 0) {
-			if (b > 0) {
-				return Math.min(a, b);
-			} else {
-				return a;
-			}
-		} else {
-			if (b > 0) {
-				return b;
-			} else {
-				return Float.NEGATIVE_INFINITY;
-			}
-		}
+		return normal.dot(new Vector3f(p).sub(ray.p)) / normal.dot(ray.r);
 	}
 	
 	@Override
 	public Vector4f trace(Ray ray, float dist, RayTracer tracer) {
 		Vector3f hit = new Vector3f(ray.p).fma(dist, ray.r);
-		Vector3f normal = new Vector3f(hit).sub(p).normalize();
 		Vector3f color = new Vector3f(diffuse).mul(0.15f);
 		
 		for (Light light : tracer.getLights()) {
@@ -90,5 +69,4 @@ public class Sphere extends TraceObject {
 			return new Vector4f(color, 1);
 		}
 	}
-	
 }
