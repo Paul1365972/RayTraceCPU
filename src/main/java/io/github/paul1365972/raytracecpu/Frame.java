@@ -25,7 +25,7 @@ public class Frame implements KeyListener {
 	private JFrame jFrame;
 	private JPanel jPanel;
 	
-	private boolean W, A, S, D, SPACE, SHIFT, UP, DOWN, RIGHT, LEFT;
+	private boolean W, A, S, D, SPACE, SHIFT, UP, DOWN, RIGHT, LEFT, PLUS, MINUS;
 	private boolean record;
 	
 	public Frame(State state, LinkedBlockingQueue<BufferedImage> unused, LinkedBlockingQueue<BufferedImage> rendered) {
@@ -88,13 +88,17 @@ public class Frame implements KeyListener {
 		if (SHIFT)
 			state.addPos(0, - SPEED, 0);
 		if (UP)
-			state.addPitch(ROT);
+			state.addPitch(ROT * state.getFov() / 90);
 		if (DOWN)
-			state.addPitch(-ROT);
+			state.addPitch(-ROT * state.getFov() / 90);
 		if (LEFT)
-			state.addYaw(-ROT);
+			state.addYaw(-ROT * state.getFov() / 90);
 		if (RIGHT)
-			state.addYaw(ROT);
+			state.addYaw(ROT * state.getFov() / 90);
+		if (PLUS)
+			state.setFov(state.getFov() / 1.1f);
+		if (MINUS)
+			state.setFov(state.getFov() * 1.1f);
 	}
 	
 	public boolean isRecording() {
@@ -141,6 +145,12 @@ public class Frame implements KeyListener {
 			case KeyEvent.VK_R:
 				record = true;
 				break;
+			case KeyEvent.VK_PLUS:
+				PLUS = true;
+				break;
+			case KeyEvent.VK_MINUS:
+				MINUS = true;
+				break;
 			case KeyEvent.VK_ESCAPE:
 				System.exit(0);
 				break;
@@ -182,6 +192,12 @@ public class Frame implements KeyListener {
 				break;
 			case KeyEvent.VK_LEFT:
 				LEFT = false;
+				break;
+			case KeyEvent.VK_PLUS:
+				PLUS = false;
+				break;
+			case KeyEvent.VK_MINUS:
+				MINUS = false;
 				break;
 		}
 	}

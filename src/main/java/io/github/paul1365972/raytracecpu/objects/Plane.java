@@ -47,21 +47,22 @@ public class Plane extends TraceObject {
 			if (!tracer.occluded(lightRay, dir.length())) {
 				float strength = light.intensity(dir);
 				
-				float angle = Math.max(0, normal.dot(dirN));
-				color.add(new Vector3f(light.getColor()).mul(diffuse).mul(strength * angle));
-				
-				Vector3f reflected = new Vector3f(ray.r).reflect(normal);
-				float specular = (float) Math.pow(Math.max(0, reflected.dot(dirN)), shininess);
-				color.fma(strength * specular, light.getColor());
+				float lambertian = Math.max(0, normal.dot(dirN));
+				color.add(new Vector3f(light.getColor()).mul(diffuse).mul(strength * lambertian));
+				if (lambertian > 0 && shininess >= 0) {
+					Vector3f halfVector = new Vector3f(dirN).sub(ray.r).normalize();
+					float specular = (float) Math.pow(Math.max(0, halfVector.dot(normal)), shininess);
+					color.fma(strength * specular, light.getColor());
+				}
 			}
 		}
-		if (reflectivity > 0 && ray.level < 10) {
+		if (reflectivity > 0 && ray.level < 15) {
 			Vector3f reflected = new Vector3f(ray.r).reflect(normal);
 			Ray reflectedRay = Ray.create(hit, reflected, ray.level, RayTracer.EPSILON);
 			Vector4f reflectedColor = tracer.computeRay(reflectedRay);
 			color.lerp(new Vector3f(reflectedColor.x, reflectedColor.y, reflectedColor.z), reflectivity);
 		}
-		if (opacity < 1 && ray.level < 10) {
+		if (opacity < 1 && ray.level < 15) {
 			Ray continuedRay = Ray.create(hit, ray.r, ray.level, RayTracer.EPSILON);
 			Vector4f refractedColor = tracer.computeRay(continuedRay);
 			return new Vector4f(color, 1).lerp(refractedColor, 1 - opacity);

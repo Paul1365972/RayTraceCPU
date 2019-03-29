@@ -22,9 +22,9 @@ public class RayTraceCPU {
 	private LinkedBlockingQueue<BufferedImage> renderedImages = new LinkedBlockingQueue<>(3);
 	
 	public RayTraceCPU() {
-		state = new State(0, 0, 0, 0, 0);
+		state = new State(-2.4f, 0.3f, 0.6f, 0.30472168f, 0.25078043f, 90f);
 		
-		state.addLight(new PointLight(0, 10, 5, new Vector3f(1, 1, 1), 30));
+		state.addLight(new PointLight(0, 5, 5, new Vector3f(1, 1, 1), 30));
 		/*for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				state.addLight(new PointLight(0 + 0.05f * i, 10, 5 + 0.05f * j, new Vector3f(1, 1, 1), 30 / 9f));
@@ -38,13 +38,13 @@ public class RayTraceCPU {
 			}
 		}*/
 		
-		state.addObject(new Sphere(-3, 0, 5, 1, new Vector3f(1, 0, 0), 16f, 1f, 0f));
-		state.addObject(new Sphere(0, 0, 5, 1, new Vector3f(0, 1, 0), 4f, 1f, 0f));
-		state.addObject(new Sphere(3, 0, 5, 1, new Vector3f(0, 0, 1), 64f, 1f, 0f));
-		state.addObject(new Sphere(0, 5, 0, 1, new Vector3f(1, 1, 1), 16f, 1f, 0.7f));
+		state.addObject(new Sphere(0, 5, 15, 5, new Vector3f(1, 0, 0), -1f, 1f, 1f));
+		state.addObject(new Sphere(-3, 0, 5, 1, new Vector3f(1, 0, 0), 8f, 1f, 0f));
+		state.addObject(new Sphere(0, 0, 5, 1, new Vector3f(0, 1, 0), 32f, 1f, 0f));
+		state.addObject(new Sphere(3, 0, 5, 1, new Vector3f(0, 0, 1), 128f, 1f, 0f));
 		state.addObject(new Sphere(3, 0, 0, 1, new Vector3f(1, 1, 1), 16f, 0.3f, 0.6f));
-		state.addObject(new Plane(0, -5, 0, new Vector3f(0, 1, 0), new Vector3f(1, 1, 1), 1f, 1f, 0.7f));
-		//state.addObject(new Plane(0, 15, 0, new Vector3f(0, -1, 0), new Vector3f(1, 1, 1), 1f, 1f, 0.7f));
+		state.addObject(new Plane(0, -5, 0, new Vector3f(0, 1, 0), new Vector3f(1, 1, 1), 1f, 1f, 0.7f - 0.7f));
+		//state.addObject(new Plane(0, -5.01f, 0, new Vector3f(0, -1, 0), new Vector3f(1, 1, 1), 1f, 1f, 0.7f - 0.7f));
 		
 		frame = new Frame(state, unusedImages, renderedImages);
 		unusedImages.addAll(frame.generateImages(10, 1600 / 1, 850 / 1));
@@ -90,7 +90,7 @@ public class RayTraceCPU {
 	
 	public static void main(String[] args) {
 		ImageIO.setUseCache(false);
-		System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "16");
+		System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "2");
 		System.out.println("Threads: " + ForkJoinPool.getCommonPoolParallelism());
 		
 		new RayTraceCPU().run();

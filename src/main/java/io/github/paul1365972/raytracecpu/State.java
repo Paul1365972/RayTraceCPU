@@ -15,11 +15,13 @@ public class State {
 	
 	private Vector3f pos;
 	private float pitch, yaw;
+	private float fov;
 	
-	public State(float x, float y, float z, float pitch, float yaw) {
+	public State(float x, float y, float z, float pitch, float yaw, float fov) {
 		this.pos = new Vector3f(x, y, z);
 		this.pitch = pitch;
 		this.yaw = yaw;
+		this.fov = fov;
 	}
 	
 	public void update(long frameNumber) {
@@ -54,6 +56,10 @@ public class State {
 		this.yaw += yaw;
 	}
 	
+	public void setFov(float fov) {
+		this.fov = fov;
+	}
+	
 	public Vector3f getPos() {
 		return pos;
 	}
@@ -65,4 +71,9 @@ public class State {
 	public float getYaw() {
 		return yaw;
 	}
+	
+	public float getFov() {
+		return fov;
+	}
+	
 }

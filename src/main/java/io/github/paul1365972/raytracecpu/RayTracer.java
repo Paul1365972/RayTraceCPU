@@ -16,7 +16,6 @@ public class RayTracer {
 	private static final Vector3f UP = new Vector3f(0, 1, 0);
 	
 	private static final Vector4f BG_COLOR = new Vector4f(0, 0, 0, 1);
-	private static final float FOV = 90;
 	
 	private State state;
 	private AtomicInteger castedRays = new AtomicInteger();
@@ -29,6 +28,7 @@ public class RayTracer {
 		Vector3f pos = new Vector3f(state.getPos());
 		float pitch = state.getPitch();
 		float yaw = state.getYaw();
+		float fov = state.getFov();
 		
 		Vector3f E = pos;
 		Vector3f t = new Vector3f((float) (Math.sin(yaw) * Math.cos(pitch)), (float) Math.sin(pitch), (float) (Math.cos(yaw) * Math.cos(pitch)));
@@ -36,7 +36,7 @@ public class RayTracer {
 		Vector3f b = UP.cross(t, new Vector3f()).normalize();
 		Vector3f v = t.cross(b, new Vector3f()).normalize(); //Unnecessary maybe?
 		
-		float gx = (float) (1 * Math.tan(Math.toRadians(FOV / 2)));
+		float gx = (float) (1 * Math.tan(Math.toRadians(fov / 2)));
 		float gy = gx * (height / (float) width);
 		
 		Vector3f qx = new Vector3f(b).mul(2 * gx / (width - 1)); //To Minus 1 or not to minus 1 hmm
