@@ -22,7 +22,7 @@ public class RayTraceCPU {
 	private LinkedBlockingQueue<BufferedImage> renderedImages = new LinkedBlockingQueue<>(3);
 	
 	public RayTraceCPU() {
-		state = new State(-2.4f, 0.3f, 0.6f, 0.30472168f, 0.25078043f, 90f);
+		state = new State(-2.4f, 0.3f, 0.6f, 0, 0, 90f);
 		
 		state.addLight(new PointLight(0, 5, 5, new Vector3f(1, 1, 1), 30));
 		/*for (int i = -1; i < 2; i++) {

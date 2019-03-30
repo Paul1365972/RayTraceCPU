@@ -32,8 +32,11 @@ public class RayTracer {
 		
 		Vector3f E = pos;
 		Vector3f t = new Vector3f((float) (Math.sin(yaw) * Math.cos(pitch)), (float) Math.sin(pitch), (float) (Math.cos(yaw) * Math.cos(pitch)));
+		boolean flip = 0 > Math.cos(pitch);
 		
 		Vector3f b = UP.cross(t, new Vector3f()).normalize();
+		if (flip)
+			b.negate();
 		Vector3f v = t.cross(b, new Vector3f()).normalize(); //Unnecessary maybe?
 		
 		float gx = (float) (1 * Math.tan(Math.toRadians(fov / 2)));

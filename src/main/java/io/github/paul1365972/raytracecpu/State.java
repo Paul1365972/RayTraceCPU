@@ -1,8 +1,7 @@
 package io.github.paul1365972.raytracecpu;
 
-import io.github.paul1365972.raytracecpu.objects.lights.Light;
 import io.github.paul1365972.raytracecpu.objects.TraceObject;
-import io.github.paul1365972.raytracecpu.objects.lights.PointLight;
+import io.github.paul1365972.raytracecpu.objects.lights.Light;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -50,10 +49,12 @@ public class State {
 	
 	public void addPitch(float pitch) {
 		this.pitch += pitch;
+		this.pitch %= Math.PI * 2;
 	}
 	
 	public void addYaw(float yaw) {
 		this.yaw += yaw;
+		this.yaw %= Math.PI * 2;
 	}
 	
 	public void setFov(float fov) {
